@@ -1,6 +1,6 @@
 # Training Monitor
 
-A simple real-time training dashboard built with **Next.js** and React.
+a UI sandbox for practicing React state, built around a simulated training loop.
 
 ## Features
 - Live Epoch counter
@@ -15,7 +15,7 @@ A simple real-time training dashboard built with **Next.js** and React.
 - React
 
 ## Screenshot
-*(Add a screenshot here later)*
+*(i put it here when project grows)*
 
 ## How to Run
 
