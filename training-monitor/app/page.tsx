@@ -31,7 +31,7 @@ export default function Home() {
             Loss
           </p>
           <p className="text-5xl font-bold text-green-400">{loss}</p>
-          <p className="text-3xl font-bold text-amber-200">3BM32</p>
+          <p className="text-3xl font-bold text-amber-200">3BM15</p>
         </div>
       </div>
 
