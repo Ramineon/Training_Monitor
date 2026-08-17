@@ -1,21 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export default function Home() {
   const [epoch, setEpoch] = useState(0);
   const [loss, setLoss] = useState(1.0);
   const [history, setHistory] = useState<{ epoch: number; loss: number }[]>([]);
+  const [running, setRunning] = useState(false);
 
-  function nextEpoch() {
-    const newLoss = parseFloat((loss * 0.85).toFixed(4));
-    const newEpoch = epoch + 1;
+  useEffect(() => {
+    if (!running) return;
 
-    setEpoch(newEpoch);
-    setLoss(newLoss);
-    setHistory([...history, { epoch: newEpoch, loss: newLoss }]);
-  }
+    const interval = setInterval(() => {
+      setEpoch((prevEpoch) => {
+        const newEpoch = prevEpoch + 1;
+
+        setLoss((prevLoss) => {
+          const newLoss = parseFloat((prevLoss * 0.85).toFixed(4));
+          setHistory((prevHistory) => [...prevHistory, { epoch: newEpoch, loss: newLoss }]);
+          return newLoss;
+        });
+
+        return newEpoch;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [running]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-black gap-8">
@@ -33,17 +45,19 @@ export default function Home() {
       </div>
 
       <button
-        onClick={nextEpoch}
-        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500"
+        onClick={() => setRunning(!running)}
+        className={`px-6 py-3 rounded-lg text-white ${
+          running ? "bg-red-600 hover:bg-red-500" : "bg-blue-600 hover:bg-blue-500"
+        }`}
       >
-        Next Epoch
+        {running ? "Pause Training" : "Start Training"}
       </button>
 
       <div className="w-full max-w-xl h-64">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={history}>
             <CartesianGrid stroke="#333" />
-            <XAxis dataKey="epoch" stroke="#888" />
+            <XAxis dataKey="epoch" stroke="#888" interval={3} />
             <YAxis stroke="#888" />
             <Tooltip />
             <Line type="monotone" dataKey="loss" stroke="#4ade80" strokeWidth={2} dot={false} />
