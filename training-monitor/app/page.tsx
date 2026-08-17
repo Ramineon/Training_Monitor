@@ -19,6 +19,11 @@ export default function Home() {
         setLoss((prevLoss) => {
           const newLoss = parseFloat((prevLoss * 0.85).toFixed(4));
           setHistory((prevHistory) => [...prevHistory, { epoch: newEpoch, loss: newLoss }]);
+
+          if (newLoss < 0.05) {
+            setRunning(false);
+          }
+
           return newLoss;
         });
 
